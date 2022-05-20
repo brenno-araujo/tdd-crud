@@ -1,30 +1,30 @@
 <?php
 
-namespace Alura\Leilao\Model;
+namespace Model;
 
-class Leilao
+class Auction
 {
-    /** @var Lance[] */
-    private $lances;
+    /** @var Bid[] */
+    private $bids;
     /** @var string */
-    private $descricao;
+    private $description;
 
-    public function __construct(string $descricao)
+    public function __construct(string $description)
     {
-        $this->descricao = $descricao;
-        $this->lances = [];
+        $this->description = $description;
+        $this->bids = [];
     }
 
-    public function recebeLance(Lance $lance)
+    public function receiveBidding(Bid $bid)
     {
-        $this->lances[] = $lance;
+        $this->bids[] = $bid;
     }
 
     /**
-     * @return Lance[]
+     * @return Bid[]
      */
-    public function getLances(): array
+    public function getBids(): array
     {
-        return $this->lances;
+        return $this->bids;
     }
 }
