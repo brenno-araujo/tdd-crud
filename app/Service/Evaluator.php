@@ -1,6 +1,6 @@
 <?php 
 
-namespace app\Service;
+namespace App\Service;
 
 use App\Model\Auction;
 
@@ -12,8 +12,8 @@ class Evaluator
     public function evaluate(Auction $model): void
     {
         $bids = $model->getBids();
-        $lastBid = $bids[count($bids)-1];
-        $this->highestValue = $lastBid;
+        $lastBid = end($bids);
+        $this->highestValue = $lastBid->getValue();
     }
 
     public function getHighestValue(): float
