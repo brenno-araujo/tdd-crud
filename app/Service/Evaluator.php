@@ -7,18 +7,30 @@ use App\Model\Auction;
 class Evaluator
 {
 
-    private $highestValue;
+    private $highestValue = -INF;
+    private $lowerValue = INF;
 
     public function evaluate(Auction $model): void
     {
         $bids = $model->getBids();
-        $lastBid = end($bids);
-        $this->highestValue = $lastBid->getValue();
+        foreach ($bids as $bid) {
+            if ($bid->getValue() > $this->highestValue) {
+                $this->highestValue = $bid->getValue();
+            }
+            if ($bid->getValue() < $this->lowerValue) {
+                $this->lowerValue = $bid->getValue();
+            }
+        }
     }
 
     public function getHighestValue(): float
     {
         return $this->highestValue;
+    }
+
+    public function getLowerValue(): float
+    {
+        return $this->lowerValue;
     }
     
 }
