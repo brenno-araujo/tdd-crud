@@ -10,66 +10,68 @@ use PHPUnit\Framework\TestCase;
 
 class EvaluatorTest extends TestCase
 {
-    public function testAppraiserMustFindeTheHighestBid()
+
+    private $evaluator;
+
+    protected function setUp(): void
     {
-        $auction = new Auction('Fiat Pulse');
-
-        $brenno = new User('Brenno');
-        $joão = new User('João');
-
-        $auction->receiveBidding(new Bid($brenno, 1500.0));
-        $auction->receiveBidding(new Bid($joão, 150.0));
-
-        $leiloeiro = new Evaluator();
-        $leiloeiro->evaluate($auction);
-
-        $highestValue = $leiloeiro->getHighestValue();
-
-        self::assertEquals(1500.0, $highestValue);
+        $this->evaluator = new Evaluator();
     }
 
-    public function testAppraiserMustFindeTheLowerBid()
+    /**
+     * @dataProvider auctionAsc
+     * @dataProvider auctionDesc
+     */
+    public function testEvaluatHighest(Auction $auction)
     {
-        $auction = new Auction('Fiat Pulse');
-
-        $brenno = new User('Brenno');
-        $joão = new User('João');
-
-        $auction->receiveBidding(new Bid($brenno, 1500.0));
-        $auction->receiveBidding(new Bid($joão, 150.0));
-
-        $leiloeiro = new Evaluator();
-        $leiloeiro->evaluate($auction);
-
-        $lowerValue  = $leiloeiro->getLowerValue();
-
-        self::assertEquals(150.0, $lowerValue);
+        $this->evaluator->evaluate($auction);
+        $highestValue = $this->evaluator->getHighestValue();
+        self::assertEquals(300, $highestValue);
     }
 
-    public function testThreeGratestValues()
+    /**
+     * @dataProvider auctionAsc
+     * @dataProvider auctionDesc
+     */
+    public function testEvaluatSmaller(Auction $auction)
+    {
+        $this->evaluator->evaluate($auction);
+        $lowerValue = $this->evaluator->getLowerValue();
+        self::assertEquals(100, $lowerValue);
+    }
+
+    public function auctionAsc()
     {
         $auction = new Auction('Fiat Pulse');
 
         $brenno = new User('Brenno');
         $joão = new User('João');
-        $genivaldo = new User('Genivaldo');
-        $cardim = new User('Cardim');
+        $maria = new User('Maria');
 
-        $auction->receiveBidding(new Bid($brenno, 1500.0));
-        $auction->receiveBidding(new Bid($joão, 150.0));
-        $auction->receiveBidding(new Bid($genivaldo, 100.0));
-        $auction->receiveBidding(new Bid($cardim, 50.0));
+        $auction->receiveBidding(new Bid($maria, 100));
+        $auction->receiveBidding(new Bid($joão, 200));
+        $auction->receiveBidding(new Bid($brenno, 300));
 
+        return [
+            'asc' => [$auction]
+        ];
+    }
 
-        $leiloeiro = new Evaluator();
-        $leiloeiro->evaluate($auction);
+    public function auctionDesc()
+    {
+        $auction = new Auction('Fiat Pulse');
 
-        $highestBids  = $leiloeiro->getHighestBids();
+        $brenno = new User('Brenno');
+        $joão = new User('João');
+        $maria = new User('Maria');
 
-        static::assertCount(3, $highestBids);
-        static::assertEquals(1500.0, $highestBids[0]->getValue());
-        static::assertEquals(150.0, $highestBids[1]->getValue());
-        static::assertEquals(100.0, $highestBids[2]->getValue());
+        $auction->receiveBidding(new Bid($maria, 300));
+        $auction->receiveBidding(new Bid($joão, 200));
+        $auction->receiveBidding(new Bid($brenno, 100));
+
+        return [
+            'desc' => [$auction]
+        ];
     }
 
 }
