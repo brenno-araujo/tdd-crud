@@ -17,7 +17,7 @@ class Auction
 
     private function itsFromTheLastUser(Bid $bid): bool
     {
-        $lastBid = $this->bids[count($this->bids) - 1];
+        $lastBid = $this->bids[array_key_last($this->bids)];
         return $bid->getUser() == $lastBid->getUser();
     }
 

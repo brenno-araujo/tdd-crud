@@ -29,7 +29,7 @@ class AuctionTest extends TestCase
         $auction->receiveBidding(new Bid($ana, 200));
 
         static::assertCount(1, $auction->getBids());
-        static::assertEquals(1000, $auction->getBids()[0]->getValue());
+        static::assertEquals(100, $auction->getBids()[0]->getValue());
     }
 
     public function createBids()
