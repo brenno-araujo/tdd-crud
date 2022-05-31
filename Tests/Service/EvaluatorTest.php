@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class EvaluatorTest extends TestCase
 {
-
+    /** Evaluator */
     private $evaluator;
 
     protected function setUp(): void
@@ -38,6 +38,14 @@ class EvaluatorTest extends TestCase
         $this->evaluator->evaluate($auction);
         $lowerValue = $this->evaluator->getLowerValue();
         self::assertEquals(100, $lowerValue);
+    }
+
+    public function testEvaluationEmptyCannotBeRated()
+    {
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('Não é possível avaliar o leilão sem lances.');
+        $auction = new Auction('Nintendo Switch');
+        $this->evaluator->evaluate($auction);
     }
 
     public function auctionAsc()

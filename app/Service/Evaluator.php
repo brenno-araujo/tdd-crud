@@ -14,6 +14,10 @@ class Evaluator
 
     public function evaluate(Auction $model): void
     {
+        if (empty($model->getBids())) {
+            throw new \DomainException('Não é possível avaliar o leilão sem lances.');
+        }
+
         $bids = $model->getBids();
         foreach ($bids as $bid) {
             if ($bid->getValue() > $this->highestValue) {
