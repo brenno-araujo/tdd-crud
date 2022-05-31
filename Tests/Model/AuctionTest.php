@@ -21,6 +21,31 @@ class AuctionTest extends TestCase
         }
     }
 
+    public function testAuctionMustNotAcceptFiveBidsPerUser()
+    {
+        $auction = new Auction('Ihpone 7');
+        $cardinJr = new User('cardinJr');
+        $joseJr = new User('joseJr');
+
+        $auction->receiveBidding(new Bid($cardinJr, 1000));
+        $auction->receiveBidding(new Bid($joseJr, 2000));
+        $auction->receiveBidding(new Bid($cardinJr, 3000));
+        $auction->receiveBidding(new Bid($joseJr, 4000));
+        $auction->receiveBidding(new Bid($cardinJr, 5000));
+        $auction->receiveBidding(new Bid($joseJr, 6000));
+        $auction->receiveBidding(new Bid($cardinJr, 7000));
+        $auction->receiveBidding(new Bid($joseJr, 8000));
+        $auction->receiveBidding(new Bid($cardinJr, 9000));        
+        $auction->receiveBidding(new Bid($joseJr, 10000));
+        $auction->receiveBidding(new Bid($cardinJr, 11000));
+
+        static::assertCount(10, $auction->getBids());
+        static::assertEquals(10000, $auction->getBids()[array_key_last($auction->getBids())]->getValue());
+
+
+
+    }
+
     public function testAuctionShouldNotReceiveEqualBids()
     {
         $ana = new User('ana');
