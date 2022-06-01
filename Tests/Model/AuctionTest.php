@@ -23,6 +23,8 @@ class AuctionTest extends TestCase
 
     public function testAuctionMustNotAcceptFiveBidsPerUser()
     {
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('O usuário não pode propor mais de cinco lances por leilão.');
         $auction = new Auction('Ihpone 7');
         $cardinJr = new User('cardinJr');
         $joseJr = new User('joseJr');
@@ -39,22 +41,17 @@ class AuctionTest extends TestCase
         $auction->receiveBidding(new Bid($joseJr, 10000));
         $auction->receiveBidding(new Bid($cardinJr, 11000));
 
-        static::assertCount(10, $auction->getBids());
-        static::assertEquals(10000, $auction->getBids()[array_key_last($auction->getBids())]->getValue());
-
-
-
     }
 
     public function testAuctionShouldNotReceiveEqualBids()
     {
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('O usuário não pode propor dois lances seguidos.');
+
         $ana = new User('ana');
         $auction = new Auction('Playstation 20');
         $auction->receiveBidding(new Bid($ana, 100));
         $auction->receiveBidding(new Bid($ana, 200));
-
-        static::assertCount(1, $auction->getBids());
-        static::assertEquals(100, $auction->getBids()[0]->getValue());
     }
 
     public function createBids()

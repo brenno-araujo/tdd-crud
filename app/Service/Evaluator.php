@@ -14,6 +14,11 @@ class Evaluator
 
     public function evaluate(Auction $model): void
     {
+
+        if ($model->isFinished()) {
+            throw new \DomainException('Leilão já finalizado.');
+        }
+
         if (empty($model->getBids())) {
             throw new \DomainException('Não é possível avaliar o leilão sem lances.');
         }

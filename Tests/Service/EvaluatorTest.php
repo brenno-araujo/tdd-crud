@@ -48,6 +48,18 @@ class EvaluatorTest extends TestCase
         $this->evaluator->evaluate($auction);
     }
 
+    public function testeAuctionFinishedCannotBeEvaluated()
+    {
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('Leilão já finalizado.');
+        
+        $auction = new Auction('Nintendo Switch 2');
+        $auction->receiveBidding(new Bid(new User('Brenno Araujo'), 1020));
+        $auction->ends();
+
+        $this->evaluator->evaluate($auction);
+    }
+
     public function auctionAsc()
     {
         $auction = new Auction('Fiat Pulse');

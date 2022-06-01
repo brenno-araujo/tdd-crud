@@ -8,11 +8,14 @@ class Auction
     private $bids;
     /** @var string */
     private $description;
+    /** @var bool */
+    private $isFinished;
 
     public function __construct(string $description)
     {
         $this->description = $description;
         $this->bids = [];
+        $this->isFinished = false;
     }
 
     private function itsFromTheLastUser(Bid $bid): bool
@@ -37,13 +40,13 @@ class Auction
     public function receiveBidding(Bid $bid)
     {
         if (!empty($this->bids) && $this->itsFromTheLastUser($bid)) {
-            return;
+            throw new \DomainException('O usuário não pode propor dois lances seguidos.');
         }
    
         $totalBidsPerUser = $this->quantityBidsPerUser($bid->getUser());
 
         if ($totalBidsPerUser >= 5) {
-            return;
+            throw new \DomainException('O usuário não pode propor mais de cinco lances por leilão.');
         }
 
         $this->bids[] = $bid;
@@ -55,5 +58,15 @@ class Auction
     public function getBids(): array
     {
         return $this->bids;
+    }
+
+    public function ends(): void
+    {
+        $this->isFinished = true;
+    }
+
+    public function isFinished(): bool
+    {
+        return $this->isFinished;
     }
 }
