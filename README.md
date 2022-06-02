@@ -4,7 +4,7 @@
 	✔  Unit Test 🚀  ✔
 </h4>
 🗺 About the project
-Project created to develop unit tests with PHPUnnit
+Project created to develop unit tests using PHPUnit
 
 🚀 Technologies used
 PHP 7
